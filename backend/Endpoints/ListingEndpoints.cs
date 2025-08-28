@@ -4,31 +4,29 @@ using Octopets.Backend.Repositories.Interfaces;
 namespace Octopets.Backend.Endpoints;
 
 public static class ListingEndpoints
-{    // Method to simulate memory exhaustion by allocating ~1GB of memory
+{    // Method to simulate expensive operation without memory exhaustion
     private static void AReallyExpensiveOperation()
     {
-        // Create lists to hold large amounts of data
-        var memoryHogs = new List<byte[]>();
-
-        // Allocate memory in chunks until we reach approximately 1GB
-        // Each iteration allocates 100MB
-        for (int i = 0; i < 10; i++)
+        // Simulate expensive CPU work instead of memory allocation to prevent OOM
+        // This provides the same delay/expensive operation effect without memory risk
+        var random = new Random();
+        double result = 0;
+        
+        // Perform CPU-intensive calculations for approximately 1 second
+        for (int i = 0; i < 1000000; i++)
         {
-            // Allocate 100MB per iteration (100 * 1024 * 1024 = 104,857,600 bytes)
-            var largeArray = new byte[100 * 1024 * 1024];
-
-            // Fill with random data to ensure memory is actually allocated
-            new Random().NextBytes(largeArray);
-
-            // Add to list to prevent garbage collection
-            memoryHogs.Add(largeArray);
-
-            // Add a small delay to let the effect be more visible
-            Thread.Sleep(100);
+            // Complex mathematical operations that consume CPU time
+            result += Math.Sqrt(random.NextDouble() * 1000) * Math.Sin(i) * Math.Cos(i);
+            
+            // Add small delays periodically to make the operation visible
+            if (i % 100000 == 0)
+            {
+                Thread.Sleep(10);
+            }
         }
-
-        // Retain the reference to prevent garbage collection
-        GC.KeepAlive(memoryHogs);
+        
+        // Prevent compiler optimization by using the result
+        _ = result;
     }
 
     public static void MapListingEndpoints(this WebApplication app)
