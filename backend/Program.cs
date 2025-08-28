@@ -29,7 +29,7 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 // Add native OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 // Enable CORS for frontend
 builder.Services.AddCors(options =>
@@ -51,7 +51,8 @@ app.MapDefaultEndpoints();
 // Always enable OpenAPI in Azure (conditionally)
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("EnableSwagger", false))
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
     app.MapScalarApiReference();
 }
 
